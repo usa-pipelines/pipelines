@@ -26,6 +26,6 @@ readline.createInterface({
   output: null
 }).on('line', function (line) {
   q.push(JSON.parse(line), function (err) {
-    if (err) process.stderr.write('Error: ' + err + '\n')
+    if (err) process.stderr.write('Error processing ' + line + ': ' + err + '\n')
   })
 })
