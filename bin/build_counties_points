@@ -17,7 +17,7 @@ fi
 # 6. Write to file
 shp2json -n intermediate/cb_2015_us_county_5m.shp \
   | ndjson-filter '!/000$/.test(d.properties.GEOID)' \
-  | ndjson-filter '["02016"].indexOf(d.properties.GEOID) < 0' \
+  | ndjson-filter '["02016", "24041", "32003", "56037", "56041", "20155", "19137", "19139"].indexOf(d.properties.GEOID) < 0' \
   | ndjson-map '(d.properties = {id: d.properties.GEOID, name: d.properties.NAME, stateFip: d.properties.STATEFP}, d)' \
   | ndjson-map -r 'label=./lib/label.js' -r 'maxDistance=./lib/max_distance.js' -r 'fipsToState=./lib/fips_to_state.json' \
     '(center = label(d), distance = maxDistance(center, d), {center, distance, id: d.properties.id, name: d.properties.name, state: fipsToState[d.properties.stateFip]})' \
