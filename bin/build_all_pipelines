@@ -7,12 +7,19 @@ if [ ! -f intermediate/all_pipelines.ndjson ]; then
   touch intermediate/all_pipelines.ndjson
 fi
 
-# 1. Join to pipelines we're already downloaded
+# Reduce the pipelines already downloaded to store which counties we already have
+cat intermediate/all_pipelines.ndjson \
+  | ndjson-reduce 'p[d.properties.county_fips] = true, p' '{}' \
+  | ndjson-map 'Object.keys(d)' \
+  | ndjson-split \
+  > intermediate/counties_downloaded.ndjson
+
+# 1. Join to counties we're already downloaded
 # 2. Skip the counties we've already downloaded pipelines for
 # 3. Batch only 500 at a time
 # 4. Download the pipelines
 # 5. Output to ndjson
-ndjson-join --left 'd.id' 'd.properties.county_fips' intermediate/counties-points.ndjson intermediate/all_pipelines.ndjson \
+ndjson-join --left 'd.id' 'd' intermediate/counties-points.ndjson intermediate/counties_downloaded.ndjson \
   | ndjson-filter '!d[1]' \
   | ndjson-map 'd[0]' \
   | head -n 500 \

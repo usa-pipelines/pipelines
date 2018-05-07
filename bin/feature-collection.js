@@ -1,4 +1,5 @@
-var output = require('ndjson-cli/output')
+#!/usr/bin/env node
+
 var readline = require('readline')
 
 process.stdout.write('{"type": "FeatureCollection", "features": [\n')
