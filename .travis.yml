@@ -24,10 +24,3 @@ deploy:
     skip_cleanup: true
     on:
       branch: master
-  - provider: pages
-    local-dir: build
-    skip-cleanup: true
-    github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
-    on:
-      branch: master
-
