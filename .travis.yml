@@ -7,14 +7,14 @@ script: npm run build
 cache:
   directories:
     - intermediate
+    - build
     - node_modules
     - $HOME/.npm
 
 deploy:
-  provider: pages
-  local-dir: build
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
-  keep-history: true
-  on:
-    branch: master
+  - provider: pages
+    local-dir: build
+    skip-cleanup: true
+    github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+    on:
+      branch: master
