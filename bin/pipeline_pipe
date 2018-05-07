@@ -12,6 +12,7 @@ var q = queue(function (task, cb) {
     if (err) return cb(err)
     if (!pipelines.length) {
       process.stderr.write(task.name + ', ' + task.state + ': 0 pipelines\n')
+      output({type: 'Feature', geometry: null, properties: {county_fips: task.id}})
       return cb()
     }
     var gasCount = pipelines.filter(p => p.properties.type === 'gas').length
