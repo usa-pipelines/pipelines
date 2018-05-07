@@ -1,0 +1,28 @@
+#!/bin/bash
+
+mkdir -p intermediate
+
+# Download county shape file from census data, if we don't have it already
+if [ ! -f intermediate/cb_2015_us_county_5m.shp ]; then
+  curl -o intermediate/cb_2015_us_county_5m.zip 'https://www2.census.gov/geo/tiger/GENZ2015/shp/cb_2015_us_county_5m.zip'
+  unzip -od intermediate intermediate/cb_2015_us_county_5m.zip cb_2015_us_county_5m.shp cb_2015_us_county_5m.dbf
+  chmod a-x intermediate/cb_2015_us_county_5m.*
+fi
+
+# 1. Filter out strange data (copied from https://github.com/topojson/us-atlas)
+# 2. Only keep the GEOID property
+# 3. Reduce to a FeatureCollection
+# 4. Flatten, turning MultiPolygons to multiple Polygons
+# 5. Split to ndjson again
+# 6. Calculate a center point from polylabel, and the max distance from that
+#    point to the edge of the polygon
+shp2json -n intermediate/cb_2015_us_county_5m.shp \
+  | ndjson-filter '!/000$/.test(d.properties.GEOID)' \
+  | ndjson-map '(d.properties = {id: d.properties.GEOID, name: d.properties.NAME, stateFip: d.properties.STATEFP}, d)' \
+  | ndjson-reduce \
+  | ndjson-map '{type: "FeatureCollection", features: d}' \
+  | geojson-flatten \
+  | ndjson-split 'd.features' \
+  | ndjson-map -r polylabel -r 'maxDistance=./lib/max_distance.js' -r 'fipsToState=./lib/fips_to_state.json' \
+    '(center = polylabel(d.geometry.coordinates, 0.0001), distance = maxDistance(center, d), {center, distance, id: d.properties.id, name: d.properties.name, state: fipsToState[d.properties.stateFip]})' \
+  > intermediate/counties-points.ndjson

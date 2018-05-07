@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+
+var output = require('ndjson-cli/output')
+var readline = require('readline')
+var queue = require('async/queue')
+
+var getPipelines = require('../lib/get_pipelines')
+
+var q = queue(function (task, cb) {
+  getPipelines(task.center, task.distance, function (err, pipelines) {
+    if (err || !pipelines.length) {
+      process.stderr.write(task.name + ', ' + task.state + ': 0 pipelines\n')
+      return cb()
+    }
+    pipelines.map(output)
+    process.stderr.write(task.name + ', ' + task.state + ': ' + pipelines.length + ' pipelines\n')
+    cb()
+  })
+}, 5)
+
+readline.createInterface({
+  input: process.stdin,
+  output: null
+}).on('line', function (line) {
+  q.push(JSON.parse(line))
+})

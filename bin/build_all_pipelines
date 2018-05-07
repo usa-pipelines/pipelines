@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# 1. Join to counties available on npms (filter out those not in npms)
+# 2. Download pipelines for each county
+ndjson-join 'd.fips' 'd.id' intermediate/counties-npms.ndjson intermediate/counties-points.ndjson \
+  | ndjson-map 'd[1]' \
+  | head -n 5 \
+  | bin/pipeline_pipe \
+  > intermediate/all_pipelines.ndjson

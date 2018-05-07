@@ -1,0 +1,9 @@
+#!/bin/bash
+
+mkdir -p build
+
+cat intermediate/all_pipelines.ndjson \
+  | ndjson-filter 'd.properties.type === "gas"' \
+  | ndjson-reduce \
+  | ndjson-map '{type: "FeatureCollection", features: d}' \
+  > build/gas_pipelines.geojson
