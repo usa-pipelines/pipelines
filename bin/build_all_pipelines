@@ -1,8 +1,15 @@
 #!/bin/bash
 
+# Download existing pipelines
+if [ ! -f build/all_pipelines.ndjson ]; then
+  curl -o build/all_pipelines.ndjson 'https://raw.githubusercontent.com/usa-pipelines/pipelines/gh-pages/all_pipelines.ndjson'
+fi
+
 # 1. Join to counties available on npms (filter out those not in npms)
 # 2. Download pipelines for each county
-ndjson-join 'd.fips' 'd.id' intermediate/counties-npms.ndjson intermediate/counties-points.ndjson \
-  | ndjson-map 'd[1]' \
+ndjson-join --left 'd.id' 'd.properties.county_fips' intermediate/counties-points.ndjson build/all_pipelines.ndjson \
+  | ndjson-filter '!d[1]' \
+  | ndjson-map 'd[0]'
+  | head -n 500 \
   | bin/pipeline_pipe \
-  > intermediate/all_pipelines.ndjson
+  >> build/all_pipelines.ndjson

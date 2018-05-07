@@ -7,7 +7,7 @@ var queue = require('async/queue')
 var getPipelines = require('../lib/get_pipelines')
 
 var q = queue(function (task, cb) {
-  getPipelines(task.center, task.distance, function (err, pipelines) {
+  getPipelines(task.center, task.distance, task.id, function (err, pipelines) {
     if (err || !pipelines.length) {
       process.stderr.write(task.name + ', ' + task.state + ': 0 pipelines\n')
       return cb()
