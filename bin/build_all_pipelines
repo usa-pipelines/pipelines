@@ -12,6 +12,6 @@ fi
 ndjson-join --left 'd.id' 'd.properties.county_fips' intermediate/counties-points.ndjson build/all_pipelines.ndjson \
   | ndjson-filter '!d[1]' \
   | ndjson-map 'd[0]' \
-  | head -n 50 \
+  | head -n 100 \
   | bin/pipeline_pipe \
   >> build/all_pipelines.ndjson
