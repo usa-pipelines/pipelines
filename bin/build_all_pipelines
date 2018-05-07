@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mkdir -p build
+
 # Download existing pipelines
 if [ ! -f build/all_pipelines.ndjson ]; then
   curl -o build/all_pipelines.ndjson 'https://raw.githubusercontent.com/usa-pipelines/pipelines/gh-pages/all_pipelines.ndjson'
