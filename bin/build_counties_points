@@ -10,12 +10,11 @@ if [ ! -f intermediate/cb_2015_us_county_5m.shp ]; then
 fi
 
 # 1. Filter out strange data (copied from https://github.com/topojson/us-atlas)
-# 2. Only keep the GEOID property
-# 3. Reduce to a FeatureCollection
-# 4. Flatten, turning MultiPolygons to multiple Polygons
-# 5. Split to ndjson again
-# 6. Calculate a center point from polylabel, and the max distance from that
-#    point to the edge of the polygon
+# 2. Filter out counties that cause timeout
+# 3. Only keep certain props
+# 4. Get center point and max distance from center to border for each county
+# 5. Join with counties that are available on npms, skipping those that aren't
+# 6. Write to file
 shp2json -n intermediate/cb_2015_us_county_5m.shp \
   | ndjson-filter '!/000$/.test(d.properties.GEOID)' \
   | ndjson-filter '["02016"].indexOf(d.properties.GEOID) < 0' \
