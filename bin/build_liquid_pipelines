@@ -2,7 +2,7 @@
 
 mkdir -p build
 
-cat intermediate/all_pipelines.ndjson \
+cat build/all_pipelines.ndjson \
   | ndjson-filter 'd.properties.type === "liquid"' \
   | ndjson-reduce \
   | ndjson-map '{type: "FeatureCollection", features: d}' \
