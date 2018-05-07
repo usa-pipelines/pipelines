@@ -7,8 +7,10 @@ var queue = require('async/queue')
 var getPipelines = require('../lib/get_pipelines')
 
 var q = queue(function (task, cb) {
+  if (!task) return cb(new Error('missing task'))
   getPipelines(task.center, task.distance, task.id, function (err, pipelines) {
-    if (err || !pipelines.length) {
+    if (err) return cb(err)
+    if (!pipelines.length) {
       process.stderr.write(task.name + ', ' + task.state + ': 0 pipelines\n')
       return cb()
     }
@@ -16,11 +18,13 @@ var q = queue(function (task, cb) {
     process.stderr.write(task.name + ', ' + task.state + ': ' + pipelines.length + ' pipelines\n')
     cb()
   })
-}, 5)
+}, 3)
 
 readline.createInterface({
   input: process.stdin,
   output: null
 }).on('line', function (line) {
-  q.push(JSON.parse(line))
+  q.push(JSON.parse(line), function (err) {
+    if (err) process.stderr.write('Error: ' + err + '\n')
+  })
 })
