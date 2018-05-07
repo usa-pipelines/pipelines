@@ -25,3 +25,5 @@ ndjson-join --left 'd.id' 'd' intermediate/counties-points.ndjson intermediate/c
   | head -n 500 \
   | bin/pipeline_pipe \
   >> intermediate/all_pipelines.ndjson
+
+gzip < intermediate/all_pipelines.ndjson > release/all_pipelines.ndjson.gz
