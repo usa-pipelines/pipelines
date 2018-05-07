@@ -21,6 +21,7 @@ deploy:
     file:
     - "release/gas_pipelines.geojson.gz"
     - "release/liquid_pipelines.geojson.gz"
+    - "intermediate/all_pipelines.ndjson"
     skip_cleanup: true
     on:
       branch: master
