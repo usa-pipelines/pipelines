@@ -10,22 +10,26 @@ var getUrl = require('../lib/url')
 var OUT_DIR = path.join(__dirname, '../intermediate')
 mkdirp.sync(OUT_DIR)
 
-getStates(function (err, states) {
-  if (err) return onError(err)
-  var all = ''
-  var pending = states.length
-  states.forEach(state => {
-    getCounties(state.state_fips, function (err, counties) {
-      if (err) return onError(err)
-      all += counties.map(c => JSON.stringify(c)).join('\n') + '\n'
-      done()
+try {
+  fs.accessSync(path.join(OUT_DIR, 'counties-npms.ndjson'))
+} catch (err) {
+  getStates(function (err, states) {
+    if (err) return onError(err)
+    var all = ''
+    var pending = states.length
+    states.forEach(state => {
+      getCounties(state.state_fips, function (err, counties) {
+        if (err) return onError(err)
+        all += counties.map(c => JSON.stringify(c)).join('\n') + '\n'
+        done()
+      })
     })
+    function done () {
+      if (--pending > 0) return
+      fs.writeFileSync(path.join(OUT_DIR, 'counties-npms.ndjson'), all)
+    }
   })
-  function done () {
-    if (--pending > 0) return
-    fs.writeFileSync(path.join(OUT_DIR, 'counties-npms.ndjson'), all)
-  }
-})
+}
 
 function getStates (cb) {
   var url = getUrl('populateComboNS', {stype: 'state_list_nd'})
