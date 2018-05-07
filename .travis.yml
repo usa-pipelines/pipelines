@@ -7,7 +7,6 @@ script: npm run build
 cache:
   directories:
     - intermediate
-    - build
     - node_modules
     - $HOME/.npm
 
@@ -15,17 +14,18 @@ before_deploy:
   - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
 
 deploy:
+  - provider: releases
+    api_key: $GITHUB_TOKEN
+    file:
+    - "release/gas_pipelines.geojson.gz"
+    - "release/liquid_pipelines.geojson.gz"
+    skip_cleanup: true
+    on:
+      branch: master
   - provider: pages
     local-dir: build
     skip-cleanup: true
     github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
     on:
       branch: master
-  - provider: releases
-    api_key: $GITHUB_TOKEN
-    file:
-    - "build/gas_pipelines.geojson"
-    - "build/liquid_pipelines.geojson"
-    skip_cleanup: true
-    on:
-      branch: master
+

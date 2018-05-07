@@ -7,7 +7,8 @@
     "build": "npm run build:counties-npms && npm run build:counties-points && npm run build:pipelines",
     "build:counties-points": "bin/build_counties_points",
     "build:counties-npms": "bin/build_npms_counties",
-    "build:pipelines": "bin/build_all_pipelines && bin/build_gas_pipelines && bin/build_liquid_pipelines"
+    "build:pipelines": "bin/build_all_pipelines && bin/build_gas_pipelines && bin/build_liquid_pipelines",
+    "gas": "bin/build_gas_pipelines"
   },
   "author": "",
   "license": "ISC",

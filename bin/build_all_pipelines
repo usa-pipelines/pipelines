@@ -3,15 +3,15 @@
 mkdir -p build
 
 # Download existing pipelines
-if [ ! -f build/all_pipelines.ndjson ]; then
-  curl -o build/all_pipelines.ndjson 'https://raw.githubusercontent.com/usa-pipelines/pipelines/gh-pages/all_pipelines.ndjson'
+if [ ! -f intermediate/all_pipelines.ndjson ]; then
+  curl -o intermediate/all_pipelines.ndjson 'https://raw.githubusercontent.com/usa-pipelines/pipelines/gh-pages/all_pipelines.ndjson'
 fi
 
 # 1. Join to counties available on npms (filter out those not in npms)
 # 2. Download pipelines for each county
-ndjson-join --left 'd.id' 'd.properties.county_fips' intermediate/counties-points.ndjson build/all_pipelines.ndjson \
+ndjson-join --left 'd.id' 'd.properties.county_fips' intermediate/counties-points.ndjson intermediate/all_pipelines.ndjson \
   | ndjson-filter '!d[1]' \
   | ndjson-map 'd[0]' \
   | head -n 200 \
   | bin/pipeline_pipe \
-  >> build/all_pipelines.ndjson
+  >> intermediate/all_pipelines.ndjson
