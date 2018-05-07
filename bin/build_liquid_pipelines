@@ -4,6 +4,5 @@ mkdir -p build
 
 cat build/all_pipelines.ndjson \
   | ndjson-filter 'd.properties.type === "liquid"' \
-  | ndjson-reduce \
-  | ndjson-map '{type: "FeatureCollection", features: d}' \
+  | node lib/feature-collection.js \
   > build/liquid_pipelines.geojson
