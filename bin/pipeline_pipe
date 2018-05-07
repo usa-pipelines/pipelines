@@ -14,8 +14,9 @@ var q = queue(function (task, cb) {
       process.stderr.write(task.name + ', ' + task.state + ': 0 pipelines\n')
       return cb()
     }
+    var gasCount = pipelines.filter(p => p.properties.type === 'gas').length
     pipelines.map(output)
-    process.stderr.write(task.name + ', ' + task.state + ': ' + pipelines.length + ' pipelines\n')
+    process.stderr.write(task.name + ', ' + task.state + ': ' + gasCount + ' gas, ' + (pipelines.length - gasCount) + ' liquid pipelines\n')
     cb()
   })
 }, 3)
