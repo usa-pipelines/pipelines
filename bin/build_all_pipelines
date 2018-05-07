@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir -p build
+mkdir -p build release
 
 # Start from empty if we don't have intermediate build artifacts cached
 if [ ! -f intermediate/all_pipelines.ndjson ]; then
