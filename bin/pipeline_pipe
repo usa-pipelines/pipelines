@@ -21,6 +21,10 @@ var q = queue(function (task, cb) {
   })
 }, 3)
 
+q.drain = function () {
+  process.stderr.write('Finished processing queue\n')
+}
+
 readline.createInterface({
   input: process.stdin,
   output: null
