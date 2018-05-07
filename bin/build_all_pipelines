@@ -11,7 +11,7 @@ fi
 # 2. Download pipelines for each county
 ndjson-join --left 'd.id' 'd.properties.county_fips' intermediate/counties-points.ndjson build/all_pipelines.ndjson \
   | ndjson-filter '!d[1]' \
-  | ndjson-map 'd[0]'
+  | ndjson-map 'd[0]' \
   | head -n 500 \
   | bin/pipeline_pipe \
   >> build/all_pipelines.ndjson
