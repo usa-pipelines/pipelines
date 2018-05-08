@@ -4,7 +4,7 @@ mkdir -p build release
 
 cat intermediate/all_pipelines.ndjson \
   | ndjson-filter 'd.properties.type === "gas"' \
-  | bin/feature-collection.js \
+  | bin/ndjson-fc-reduce \
   > build/gas_pipelines.geojson
 
 gzip < build/gas_pipelines.geojson > release/gas_pipelines.geojson.gz

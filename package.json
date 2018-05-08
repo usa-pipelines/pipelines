@@ -7,8 +7,7 @@
     "build": "npm run build:counties-npms && npm run build:counties-points && npm run build:pipelines",
     "build:counties-points": "bin/build_counties_points",
     "build:counties-npms": "bin/build_npms_counties",
-    "build:pipelines": "bin/build_all_pipelines && bin/build_gas_pipelines && bin/build_liquid_pipelines",
-    "gas": "bin/build_gas_pipelines"
+    "build:pipelines": "bin/build_all_pipelines && bin/build_gas_pipelines && bin/build_liquid_pipelines"
   },
   "author": "",
   "license": "ISC",
@@ -17,14 +16,12 @@
     "@turf/meta": "^6.0.2",
     "async": "^2.6.0",
     "cheap-ruler": "^2.5.1",
-    "geojson-flatten": "^0.2.2",
     "geojson-rewind": "^0.3.1",
     "mkdirp": "^0.5.1",
     "ndjson-cli": "^0.3.1",
     "polylabel": "^1.0.2",
     "request": "^2.85.0",
     "shapefile": "^0.6.6",
-    "topojson-client": "^3.0.0",
     "wkx": "^0.4.4"
   }
 }
